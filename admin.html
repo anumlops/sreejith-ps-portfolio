@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Sreejith P.S. Content Editor</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f0e8; color: #1A1A18; line-height: 1.6; padding: 2rem; }
+    .admin-wrap { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; color: #2D5A27; }
+    .sub { color: #666; font-size: 0.9rem; margin-bottom: 2rem; }
+    .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .preview-panel { order: -1; } }
+
+    /* Token bar */
+    .token-bar { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .token-bar label { font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+    .token-bar input[type="password"] { flex: 1; min-width: 200px; padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+    .token-bar .repo-inputs { display: flex; gap: 0.5rem; align-items: center; }
+    .token-bar .repo-inputs input { width: 120px; padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+    .token-bar .hint { font-size: 0.8rem; color: #888; }
+
+    /* Form */
+    .form-panel { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; }
+    .form-panel h2 { font-size: 1.1rem; color: #2D5A27; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #eee; }
+    .field-group { margin-bottom: 1.25rem; }
+    .field-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.3rem; color: #444; }
+    .field-group textarea { width: 100%; min-height: 80px; padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; font-family: inherit; resize: vertical; }
+    .field-group textarea:focus { outline: 2px solid #8AB4C9; outline-offset: -1px; border-color: transparent; }
+    .field-group input[type="text"], .field-group input[type="url"] { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+    .field-group input:focus { outline: 2px solid #8AB4C9; outline-offset: -1px; border-color: transparent; }
+    .field-group .input-row { display: flex; gap: 0.5rem; align-items: center; }
+    .field-group .input-row input { flex: 1; }
+    .field-group .input-row .thumb { width: 48px; height: 36px; border-radius: 3px; background: #eee; flex-shrink: 0; overflow: hidden; }
+    .field-group .input-row .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .field-group .stat-row { display: flex; gap: 0.5rem; }
+    .field-group .stat-row input:first-child { width: 100px; flex-shrink: 0; }
+    .field-group .stat-row input:last-child { flex: 1; }
+    .field-group .video-row { display: flex; gap: 0.5rem; align-items: center; }
+    .field-group .video-row input { flex: 1; }
+    .field-group .video-row .embed-preview { font-size: 0.75rem; color: #888; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .field-group .error-msg { color: #c0392b; font-size: 0.8rem; margin-top: 0.25rem; display: none; }
+
+    /* Buttons */
+    .actions { margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .btn { padding: 0.65rem 1.25rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #2D5A27; color: #fff; }
+    .btn-secondary { background: #8AB4C9; color: #fff; }
+    .btn-outline { background: none; border: 2px solid #2D5A27; color: #2D5A27; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Status */
+    .status { margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.9rem; display: none; }
+    .status.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; display: block; }
+    .status.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; display: block; }
+    .status.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; display: block; }
+
+    /* Preview */
+    .preview-panel { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; position: sticky; top: 1rem; max-height: calc(100vh - 4rem); overflow-y: auto; }
+    .preview-panel h2 { font-size: 1.1rem; color: #2D5A27; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #eee; }
+    .preview-box { background: #E8EDE4; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+    .preview-box.dark { background: #2D5A27; color: #fff; }
+    .preview-box h3 { font-size: 0.9rem; margin-bottom: 0.5rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; }
+    .preview-box p { font-size: 0.85rem; margin-bottom: 0.5rem; line-height: 1.5; }
+    .preview-box .stat-row { display: flex; gap: 1rem; }
+    .preview-box .stat-row .stat-item { text-align: center; }
+    .preview-box .stat-row .stat-item .num { font-weight: 700; font-size: 1.1rem; }
+    .preview-box .stat-row .stat-item .lbl { font-size: 0.75rem; opacity: 0.7; }
+
+    /* Instructions */
+    .instructions { margin-top: 2rem; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; }
+    .instructions h2 { font-size: 1.1rem; color: #2D5A27; margin-bottom: 0.75rem; }
+    .instructions ol { padding-left: 1.25rem; font-size: 0.9rem; color: #444; }
+    .instructions ol li { margin-bottom: 0.5rem; }
+    .instructions code { background: #eee; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+
+  <h1>Content Editor</h1>
+  <p class="sub">Edit the site content and publish — changes go live in ~30-60s via Vercel.</p>
+
+  <!-- Token bar -->
+  <div class="token-bar">
+    <label for="token">GitHub Token:</label>
+    <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="repo-inputs">
+      <span style="font-size:0.85rem;color:#666">/</span>
+      <input type="text" id="owner" value="anumlops" placeholder="Owner">
+      <span style="font-size:0.85rem;color:#666">/</span>
+      <input type="text" id="repo" value="sreejith-ps-portfolio" placeholder="Repo">
+    </div>
+    <span class="hint">Token stored in memory only for this session.</span>
+  </div>
+
+  <div class="layout">
+
+    <!-- Form panel -->
+    <div class="form-panel">
+      <h2>Bio</h2>
+      <div class="field-group">
+        <label for="bio1">Paragraph 1</label>
+        <textarea id="bio1"></textarea>
+      </div>
+      <div class="field-group">
+        <label for="bio2">Paragraph 2</label>
+        <textarea id="bio2"></textarea>
+      </div>
+      <div class="field-group">
+        <label for="bio3">Paragraph 3 <span style="font-weight:400;color:#999">(optional)</span></label>
+        <textarea id="bio3"></textarea>
+      </div>
+
+      <h2>APEC</h2>
+      <div class="field-group">
+        <label for="apec1">Paragraph 1</label>
+        <textarea id="apec1"></textarea>
+      </div>
+      <div class="field-group">
+        <label for="apec2">Paragraph 2</label>
+        <textarea id="apec2"></textarea>
+      </div>
+
+      <h2>Stats</h2>
+      <div class="field-group">
+        <label>Stat 1</label>
+        <div class="stat-row">
+          <input type="text" id="stat1-num" placeholder="500+">
+          <input type="text" id="stat1-lbl" placeholder="Farmers Reached">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Stat 2</label>
+        <div class="stat-row">
+          <input type="text" id="stat2-num" placeholder="50+">
+          <input type="text" id="stat2-lbl" placeholder="Workshops">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Stat 3</label>
+        <div class="stat-row">
+          <input type="text" id="stat3-num" placeholder="10+">
+          <input type="text" id="stat3-lbl" placeholder="Years">
+        </div>
+      </div>
+
+      <h2>Gallery Images</h2>
+      <p style="font-size:0.8rem;color:#888;margin-bottom:0.75rem">Upload images to the <code>/images</code> folder in the repo, then reference them here (e.g. <code>images/farm1.jpg</code>).</p>
+      <div id="gallery-fields">
+        <div class="field-group">
+          <label>Photo 1</label>
+          <div class="input-row">
+            <input type="text" class="gallery-input" placeholder="images/photo1.jpg">
+            <div class="thumb"></div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Photo 2</label>
+          <div class="input-row">
+            <input type="text" class="gallery-input" placeholder="images/photo2.jpg">
+            <div class="thumb"></div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Photo 3</label>
+          <div class="input-row">
+            <input type="text" class="gallery-input" placeholder="images/photo3.jpg">
+            <div class="thumb"></div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Photo 4</label>
+          <div class="input-row">
+            <input type="text" class="gallery-input" placeholder="images/photo4.jpg">
+            <div class="thumb"></div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Photo 5</label>
+          <div class="input-row">
+            <input type="text" class="gallery-input" placeholder="images/photo5.jpg">
+            <div class="thumb"></div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Photo 6</label>
+          <div class="input-row">
+            <input type="text" class="gallery-input" placeholder="images/photo6.jpg">
+            <div class="thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2>Videos</h2>
+      <p style="font-size:0.8rem;color:#888;margin-bottom:0.75rem">Paste YouTube URLs (any format: <code>youtube.com/watch?v=</code>, <code>youtu.be/</code>, or just the video ID).</p>
+      <div id="video-fields">
+        <div class="field-group">
+          <label>Video 1</label>
+          <div class="video-row">
+            <input type="text" class="video-title" placeholder="Title" style="width:35%">
+            <input type="text" class="video-url" placeholder="YouTube URL or ID" style="flex:1">
+            <span class="embed-preview"></span>
+          </div>
+          <div class="error-msg video-error"></div>
+        </div>
+        <div class="field-group">
+          <label>Video 2</label>
+          <div class="video-row">
+            <input type="text" class="video-title" placeholder="Title" style="width:35%">
+            <input type="text" class="video-url" placeholder="YouTube URL or ID" style="flex:1">
+            <span class="embed-preview"></span>
+          </div>
+          <div class="error-msg video-error"></div>
+        </div>
+        <div class="field-group">
+          <label>Video 3</label>
+          <div class="video-row">
+            <input type="text" class="video-title" placeholder="Title" style="width:35%">
+            <input type="text" class="video-url" placeholder="YouTube URL or ID" style="flex:1">
+            <span class="embed-preview"></span>
+          </div>
+          <div class="error-msg video-error"></div>
+        </div>
+        <div class="field-group">
+          <label>Video 4</label>
+          <div class="video-row">
+            <input type="text" class="video-title" placeholder="Title" style="width:35%">
+            <input type="text" class="video-url" placeholder="YouTube URL or ID" style="flex:1">
+            <span class="embed-preview"></span>
+          </div>
+          <div class="error-msg video-error"></div>
+        </div>
+      </div>
+
+      <h2>Contact</h2>
+      <div class="field-group">
+        <label for="contact-email">Email</label>
+        <input type="text" id="contact-email">
+      </div>
+      <div class="field-group">
+        <label for="contact-phone">Phone</label>
+        <input type="text" id="contact-phone">
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-save" onclick="saveAndPublish()">Save &amp; Publish</button>
+        <button class="btn btn-outline" onclick="downloadBackup()">Download content.json</button>
+      </div>
+      <div id="status" class="status"></div>
+    </div>
+
+    <!-- Preview panel -->
+    <div class="preview-panel">
+      <h2>Live Preview</h2>
+      <div class="preview-box">
+        <h3>Bio</h3>
+        <div id="preview-bio"></div>
+      </div>
+      <div class="preview-box dark">
+        <h3>APEC</h3>
+        <div id="preview-apec"></div>
+        <div style="margin-top:0.75rem">
+          <div class="stat-row" id="preview-stats"></div>
+        </div>
+      </div>
+      <div class="preview-box">
+        <h3>Gallery</h3>
+        <p id="preview-gallery" style="color:#888">6 images configured</p>
+      </div>
+      <div class="preview-box dark">
+        <h3>Videos</h3>
+        <p id="preview-videos" style="color:#aaa">4 video slots</p>
+      </div>
+      <div class="preview-box">
+        <h3>Contact</h3>
+        <div id="preview-contact"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <h2>Getting Started — One-Time Token Setup</h2>
+    <ol>
+      <li>Go to <strong>GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong></li>
+      <li>Click <strong>Generate new token (classic)</strong></li>
+      <li>Give it a name like "Site Editor" and set expiration as you prefer</li>
+      <li>Under <strong>Scope</strong>, check only <code>repo</code> (full control of private repositories)</li>
+      <li>Click <strong>Generate token</strong> and copy it — GitHub will only show it once</li>
+      <li>Paste the token into the <strong>"GitHub Token"</strong> field above</li>
+      <li>Ensure <strong>Owner</strong> and <strong>Repo</strong> fields match your GitHub (default: <code>anumlops / sreejith-ps-portfolio</code>)</li>
+      <li>Click <strong>"Save &amp; Publish"</strong> — Vercel auto-deploys within ~30-60 seconds</li>
+    </ol>
+    <p style="margin-top:0.75rem;font-size:0.85rem;color:#888">Your token stays in browser memory only. Refreshing the page clears it — paste it again on your next editing session.</p>
+
+    <h2 style="margin-top:1.25rem">Adding Photos</h2>
+    <ol>
+      <li>Create an <code>/images</code> folder in your repo (via GitHub web UI or GitHub Desktop)</li>
+      <li>Upload your photo files there</li>
+      <li>Reference them in the Gallery fields as <code>images/your-photo-name.jpg</code></li>
+      <li>Update the hero landscape photo and portrait photo paths in <code>style.css</code> directly (search for <code>REPLACE:</code> comments)</li>
+    </ol>
+  </div>
+
+</div>
+
+<script>
+const GITHUB_API = 'https://api.github.com';
+
+// Load current content.json on page load
+async function loadContent() {
+  try {
+    const res = await fetch('content.json?_=' + Date.now());
+    if (!res.ok) return;
+    const data = await res.json();
+    populateForm(data);
+    updatePreview(data);
+  } catch (e) {
+    // content.json not available yet
+  }
+}
+
+function populateForm(data) {
+  if (data.bio) {
+    document.getElementById('bio1').value = data.bio.paragraph1 || '';
+    document.getElementById('bio2').value = data.bio.paragraph2 || '';
+    document.getElementById('bio3').value = data.bio.paragraph3 || '';
+  }
+  if (data.apec) {
+    document.getElementById('apec1').value = data.apec.paragraph1 || '';
+    document.getElementById('apec2').value = data.apec.paragraph2 || '';
+  }
+  if (data.stats) {
+    document.getElementById('stat1-num').value = data.stats[0]?.number || '';
+    document.getElementById('stat1-lbl').value = data.stats[0]?.label || '';
+    document.getElementById('stat2-num').value = data.stats[1]?.number || '';
+    document.getElementById('stat2-lbl').value = data.stats[1]?.label || '';
+    document.getElementById('stat3-num').value = data.stats[2]?.number || '';
+    document.getElementById('stat3-lbl').value = data.stats[2]?.label || '';
+  }
+  if (data.gallery) {
+    const inputs = document.querySelectorAll('.gallery-input');
+    inputs.forEach((inp, i) => {
+      if (data.gallery[i]) inp.value = data.gallery[i].filename || '';
+    });
+  }
+  if (data.videos) {
+    const titles = document.querySelectorAll('.video-title');
+    const urls = document.querySelectorAll('.video-url');
+    titles.forEach((t, i) => { if (data.videos[i]) t.value = data.videos[i].title || ''; });
+    urls.forEach((u, i) => { if (data.videos[i]) u.value = data.videos[i].url || ''; });
+  }
+  if (data.contact) {
+    document.getElementById('contact-email').value = data.contact.email || '';
+    document.getElementById('contact-phone').value = data.contact.phone || '';
+  }
+}
+
+function getFormData() {
+  return {
+    bio: {
+      paragraph1: document.getElementById('bio1').value,
+      paragraph2: document.getElementById('bio2').value,
+      paragraph3: document.getElementById('bio3').value
+    },
+    apec: {
+      paragraph1: document.getElementById('apec1').value,
+      paragraph2: document.getElementById('apec2').value
+    },
+    stats: [
+      { number: document.getElementById('stat1-num').value, label: document.getElementById('stat1-lbl').value },
+      { number: document.getElementById('stat2-num').value, label: document.getElementById('stat2-lbl').value },
+      { number: document.getElementById('stat3-num').value, label: document.getElementById('stat3-lbl').value }
+    ],
+    gallery: Array.from(document.querySelectorAll('.gallery-input')).map(inp => ({ filename: inp.value })),
+    videos: Array.from(document.querySelectorAll('.video-title')).map((t, i) => ({
+      title: t.value,
+      url: document.querySelectorAll('.video-url')[i].value
+    })),
+    contact: {
+      email: document.getElementById('contact-email').value,
+      phone: document.getElementById('contact-phone').value
+    }
+  };
+}
+
+function convertYouTubeUrl(url) {
+  if (!url) return '';
+  let id = '';
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) { id = m[1]; break; }
+  }
+  return id ? `https://www.youtube.com/embed/${id}` : url;
+}
+
+function updatePreview() {
+  const data = getFormData();
+
+  // Bio preview
+  const bioDiv = document.getElementById('preview-bio');
+  bioDiv.innerHTML = [data.bio.paragraph1, data.bio.paragraph2, data.bio.paragraph3].filter(Boolean).map(p => `<p>${p}</p>`).join('');
+
+  // APEC preview
+  const apecDiv = document.getElementById('preview-apec');
+  apecDiv.innerHTML = [data.apec.paragraph1, data.apec.paragraph2].filter(Boolean).map(p => `<p>${p}</p>`).join('');
+
+  // Stats preview
+  const statsDiv = document.getElementById('preview-stats');
+  statsDiv.innerHTML = data.stats.map(s => `<div class="stat-item"><div class="num">${s.number}</div><div class="lbl">${s.label}</div></div>`).join('');
+
+  // Gallery preview
+  const galleryCount = data.gallery.filter(g => g.filename).length;
+  document.getElementById('preview-gallery').textContent = galleryCount > 0 ? `${galleryCount} of 6 images set` : 'No images set';
+
+  // Videos preview
+  const videoCount = data.videos.filter(v => v.url).length;
+  document.getElementById('preview-videos').textContent = videoCount > 0 ? `${videoCount} of 4 videos set` : 'No videos set';
+
+  // Contact preview
+  const contactDiv = document.getElementById('preview-contact');
+  contactDiv.innerHTML = `<p><strong>Email:</strong> ${data.contact.email || '(not set)'}</p><p><strong>Phone:</strong> ${data.contact.phone || '(not set)'}</p>`;
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('status');
+  el.className = 'status ' + type;
+  el.textContent = msg;
+}
+
+function validate() {
+  const errors = [];
+  const bio1 = document.getElementById('bio1').value.trim();
+  const apec1 = document.getElementById('apec1').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  const phone = document.getElementById('contact-phone').value.trim();
+
+  if (!bio1) errors.push('Bio paragraph 1 is required.');
+  if (!apec1) errors.push('APEC paragraph 1 is required.');
+  if (!email) errors.push('Email is required.');
+  if (!phone) errors.push('Phone is required.');
+
+  // Validate YouTube URLs
+  const videoUrls = document.querySelectorAll('.video-url');
+  videoUrls.forEach((inp, i) => {
+    const val = inp.value.trim();
+    const errEl = inp.closest('.field-group').querySelector('.video-error');
+    if (errEl) errEl.style.display = 'none';
+    if (val && !convertYouTubeUrl(val)) {
+      errors.push(`Video ${i + 1}: "${val}" does not look like a valid YouTube URL or ID.`);
+      if (errEl) { errEl.textContent = 'Invalid YouTube URL'; errEl.style.display = 'block'; }
+    }
+  });
+
+  return errors;
+}
+
+async function saveAndPublish() {
+  const token = document.getElementById('token').value.trim();
+  const owner = document.getElementById('owner').value.trim();
+  const repo = document.getElementById('repo').value.trim();
+
+  if (!token) { setStatus('Please enter your GitHub token.', 'error'); return; }
+  if (!owner || !repo) { setStatus('Please enter owner and repo names.', 'error'); return; }
+
+  const validationErrors = validate();
+  if (validationErrors.length > 0) {
+    setStatus('Validation errors:\n- ' + validationErrors.join('\n- '), 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true;
+  btn.textContent = 'Publishing...';
+  setStatus('Pushing to GitHub... This may take a few seconds.', 'info');
+
+  const data = getFormData();
+  const content = JSON.stringify(data, null, 2);
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+
+  try {
+    // Get current file SHA
+    const getRes = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/content.json`, {
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    let sha = null;
+    if (getRes.ok) {
+      const meta = await getRes.json();
+      sha = meta.sha;
+    } else if (getRes.status !== 404) {
+      const err = await getRes.json().catch(() => ({}));
+      throw new Error(err.message || `GitHub API error: ${getRes.status}`);
+    }
+
+    // Commit the file
+    const body = {
+      message: 'Update content.json via admin dashboard',
+      content: encoded,
+      branch: 'main'
+    };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(`${GITHUB_API}/repos/${owner}/${repo}/contents/content.json`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github.v3+json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(err.message || `GitHub API error: ${putRes.status}`);
+    }
+
+    setStatus('Published successfully! Changes pushed to GitHub. Vercel will redeploy automatically — usually within 30-60 seconds. Refresh the live site to see updates.', 'success');
+  } catch (e) {
+    setStatus(`Failed to publish: ${e.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save & Publish';
+  }
+}
+
+function downloadBackup() {
+  const data = getFormData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'content.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+// Gallery thumbnail previews
+document.querySelectorAll('.gallery-input').forEach(inp => {
+  inp.addEventListener('input', function() {
+    const thumb = this.parentElement.querySelector('.thumb');
+    if (this.value.trim()) {
+      thumb.innerHTML = `<img src="${this.value.trim()}" alt="" onerror="this.parentElement.innerHTML=''">`;
+    } else {
+      thumb.innerHTML = '';
+    }
+    updatePreview();
+  });
+});
+
+// Video embed preview
+document.querySelectorAll('.video-url').forEach(inp => {
+  inp.addEventListener('input', function() {
+    const preview = this.parentElement.querySelector('.embed-preview');
+    const errEl = this.closest('.field-group').querySelector('.video-error');
+    if (errEl) errEl.style.display = 'none';
+    const embed = convertYouTubeUrl(this.value.trim());
+    preview.textContent = embed ? '✓ embed ready' : (this.value.trim() ? '✗ invalid URL' : '');
+    updatePreview();
+  });
+});
+
+// Live preview on any input change
+document.querySelectorAll('textarea, input').forEach(el => {
+  el.addEventListener('input', updatePreview);
+});
+
+// Load content on page load
+loadContent();
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "bio": {
+    "paragraph1": "Sreejith P.S. is an organic farmer from Kerala, India, whose relationship with the land began in childhood. Growing up in the paddy fields of [region], he developed a deep understanding of traditional farming practices and the ecological wisdom embedded in Kerala's agricultural heritage. After years of working with the land, he recognized the growing disconnect between modern education and traditional agricultural knowledge.",
+    "paragraph2": "His journey into organic farming was not just a career choice but a return to roots. He believes that sustainable agriculture is the bridge between Kerala's rich farming traditions and a food-secure future. Through his work, he advocates for farming practices that respect the land, support local biodiversity, and empower rural communities.",
+    "paragraph3": "Today, he divides his time between his farm and his educational work with APEC, working to ensure that the next generation of farmers has access to the knowledge and resources they need to build a sustainable agricultural future for Kerala."
+  },
+  "apec": {
+    "paragraph1": "APEC (Agricultural Education Initiative) was founded by Sreejith P.S. with the mission of bridging the gap between traditional agricultural wisdom and modern educational practices. Based in Kerala, APEC works with farming communities to promote sustainable agriculture, organic farming methods, and ecological stewardship.",
+    "paragraph2": "Through workshops, field demonstrations, and community programs, APEC empowers farmers with the knowledge and skills they need to transition to organic practices, improve soil health, and build resilient farming systems that honor Kerala's agricultural heritage while embracing innovation."
+  },
+  "stats": [
+    { "number": "500+", "label": "Farmers Reached" },
+    { "number": "50+", "label": "Workshops" },
+    { "number": "10+", "label": "Years" }
+  ],
+  "gallery": [
+    { "filename": "" },
+    { "filename": "" },
+    { "filename": "" },
+    { "filename": "" },
+    { "filename": "" },
+    { "filename": "" }
+  ],
+  "videos": [
+    { "title": "", "url": "" },
+    { "title": "", "url": "" },
+    { "title": "", "url": "" },
+    { "title": "", "url": "" }
+  ],
+  "contact": {
+    "email": "sreejith@example.com",
+    "phone": "+91 XXXXX XXXXX"
+  }
+}
