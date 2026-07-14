@@ -9,26 +9,59 @@
     "paragraph2": "Through workshops, field demonstrations, and community programs, APEC empowers farmers with the knowledge and skills they need to transition to organic practices, improve soil health, and build resilient farming systems that honor Kerala's agricultural heritage while embracing innovation."
   },
   "stats": [
-    { "number": "500+", "label": "Farmers Reached" },
-    { "number": "50+", "label": "Workshops" },
-    { "number": "10+", "label": "Years" }
+    {
+      "number": "500+",
+      "label": "Farmers Reached"
+    },
+    {
+      "number": "50+",
+      "label": "Workshops"
+    },
+    {
+      "number": "10+",
+      "label": "Years"
+    }
   ],
   "gallery": [
-    { "filename": "" },
-    { "filename": "" },
-    { "filename": "" },
-    { "filename": "" },
-    { "filename": "" },
-    { "filename": "" }
+    {
+      "filename": ""
+    },
+    {
+      "filename": ""
+    },
+    {
+      "filename": ""
+    },
+    {
+      "filename": ""
+    },
+    {
+      "filename": ""
+    },
+    {
+      "filename": ""
+    }
   ],
   "videos": [
-    { "title": "", "url": "" },
-    { "title": "", "url": "" },
-    { "title": "", "url": "" },
-    { "title": "", "url": "" }
+    {
+      "title": "",
+      "url": ""
+    },
+    {
+      "title": "",
+      "url": ""
+    },
+    {
+      "title": "",
+      "url": ""
+    },
+    {
+      "title": "",
+      "url": ""
+    }
   ],
   "contact": {
-    "email": "sreejith@example.com",
-    "phone": "+91 XXXXX XXXXX"
+    "email": "sreejithps68@gmail.com",
+    "phone": "+91 8281728392"
   }
 }
