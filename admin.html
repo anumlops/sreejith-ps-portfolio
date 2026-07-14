@@ -147,6 +147,28 @@
         </div>
       </div>
 
+      <h2>Farm Produce</h2>
+      <div class="field-group">
+        <label for="prod-intro">Intro text</label>
+        <textarea id="prod-intro" rows="2"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div>
+          <h3 style="font-size:0.95rem;color:#2D5A27;margin:0.5rem 0">Organic Rice</h3>
+          <div class="field-group"><label>Name</label><input type="text" id="prod-rice-name"></div>
+          <div class="field-group"><label>Description</label><textarea id="prod-rice-desc" rows="3"></textarea></div>
+          <div class="field-group"><label>Image path</label><div class="input-row"><input type="text" class="prod-input" data-id="rice" placeholder="images/rice.jpg"><div class="thumb" id="thumb-rice"></div></div></div>
+          <div class="field-group"><label>Note (seasonal, etc.)</label><input type="text" id="prod-rice-note" placeholder="Seasonal availability..."></div>
+        </div>
+        <div>
+          <h3 style="font-size:0.95rem;color:#2D5A27;margin:0.5rem 0">Organic Vegetables</h3>
+          <div class="field-group"><label>Name</label><input type="text" id="prod-veg-name"></div>
+          <div class="field-group"><label>Description</label><textarea id="prod-veg-desc" rows="3"></textarea></div>
+          <div class="field-group"><label>Image path</label><div class="input-row"><input type="text" class="prod-input" data-id="veg" placeholder="images/veg.jpg"><div class="thumb" id="thumb-veg"></div></div></div>
+          <div class="field-group"><label>Note (seasonal, etc.)</label><input type="text" id="prod-veg-note" placeholder="Available based on season..."></div>
+        </div>
+      </div>
+
       <h2>Gallery Images</h2>
       <p style="font-size:0.8rem;color:#888;margin-bottom:0.75rem">Upload images to the <code>/images</code> folder in the repo, then reference them here (e.g. <code>images/farm1.jpg</code>).</p>
       <div id="gallery-fields">
@@ -267,6 +289,10 @@
         </div>
       </div>
       <div class="preview-box">
+        <h3>Farm Produce</h3>
+        <p id="preview-products" style="color:#888">No products configured</p>
+      </div>
+      <div class="preview-box">
         <h3>Gallery</h3>
         <p id="preview-gallery" style="color:#888">6 images configured</p>
       </div>
@@ -341,6 +367,19 @@ function populateForm(data) {
     document.getElementById('stat3-num').value = data.stats[2]?.number || '';
     document.getElementById('stat3-lbl').value = data.stats[2]?.label || '';
   }
+  if (data.products) {
+    document.getElementById('prod-intro').value = data.products.intro || '';
+    document.getElementById('prod-rice-name').value = data.products.rice?.name || '';
+    document.getElementById('prod-rice-desc').value = data.products.rice?.description || '';
+    document.getElementById('prod-rice-note').value = data.products.rice?.note || '';
+    document.getElementById('prod-veg-name').value = data.products.vegetables?.name || '';
+    document.getElementById('prod-veg-desc').value = data.products.vegetables?.description || '';
+    document.getElementById('prod-veg-note').value = data.products.vegetables?.note || '';
+    const riceInp = document.querySelector('.prod-input[data-id="rice"]');
+    const vegInp = document.querySelector('.prod-input[data-id="veg"]');
+    if (riceInp) riceInp.value = data.products.rice?.image || '';
+    if (vegInp) vegInp.value = data.products.vegetables?.image || '';
+  }
   if (data.gallery) {
     const inputs = document.querySelectorAll('.gallery-input');
     inputs.forEach((inp, i) => {
@@ -375,6 +414,21 @@ function getFormData() {
       { number: document.getElementById('stat2-num').value, label: document.getElementById('stat2-lbl').value },
       { number: document.getElementById('stat3-num').value, label: document.getElementById('stat3-lbl').value }
     ],
+    products: {
+      intro: document.getElementById('prod-intro').value,
+      rice: {
+        name: document.getElementById('prod-rice-name').value,
+        description: document.getElementById('prod-rice-desc').value,
+        image: document.querySelector('.prod-input[data-id="rice"]')?.value || '',
+        note: document.getElementById('prod-rice-note').value
+      },
+      vegetables: {
+        name: document.getElementById('prod-veg-name').value,
+        description: document.getElementById('prod-veg-desc').value,
+        image: document.querySelector('.prod-input[data-id="veg"]')?.value || '',
+        note: document.getElementById('prod-veg-note').value
+      }
+    },
     gallery: Array.from(document.querySelectorAll('.gallery-input')).map(inp => ({ filename: inp.value })),
     videos: Array.from(document.querySelectorAll('.video-title')).map((t, i) => ({
       title: t.value,
@@ -415,6 +469,11 @@ function updatePreview() {
   // Stats preview
   const statsDiv = document.getElementById('preview-stats');
   statsDiv.innerHTML = data.stats.map(s => `<div class="stat-item"><div class="num">${s.number}</div><div class="lbl">${s.label}</div></div>`).join('');
+
+  // Products preview
+  const prodRiceImg = data.products?.rice?.image ? 'Rice: img set' : 'Rice: no img';
+  const prodVegImg = data.products?.vegetables?.image ? 'Veg: img set' : 'Veg: no img';
+  document.getElementById('preview-products').textContent = prodRiceImg + ' | ' + prodVegImg;
 
   // Gallery preview
   const galleryCount = data.gallery.filter(g => g.filename).length;
@@ -538,6 +597,17 @@ function downloadBackup() {
   document.body.removeChild(a);
   URL.revokeObjectURL(a.href);
 }
+
+// Product image thumbnail previews
+document.querySelectorAll('.prod-input').forEach(inp => {
+  inp.addEventListener('input', function() {
+    const thumb = document.getElementById('thumb-' + this.dataset.id);
+    if (this.value.trim()) {
+      thumb.innerHTML = `<img src="${this.value.trim()}" alt="" onerror="this.parentElement.innerHTML=''">`;
+    } else { thumb.innerHTML = ''; }
+    updatePreview();
+  });
+});
 
 // Gallery thumbnail previews
 document.querySelectorAll('.gallery-input').forEach(inp => {

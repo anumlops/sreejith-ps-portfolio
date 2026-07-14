@@ -22,6 +22,21 @@
       "label": "Years"
     }
   ],
+  "products": {
+    "intro": "Sreejith sells organic rice and fresh vegetables directly from the farm. Grown using traditional methods in Kerala's fertile soil — no chemicals, no pesticides.",
+    "rice": {
+      "name": "Organic Rice",
+      "description": "Traditional Kerala rice varieties grown using natural farming methods. Available in Matta (red rice), Jeerakasala, and other native varieties. Naturally nutritious, rich in flavor.",
+      "image": "",
+      "note": "Seasonal availability — contact to check current stock"
+    },
+    "vegetables": {
+      "name": "Organic Vegetables",
+      "description": "Fresh, chemical-free vegetables grown on the farm using traditional organic practices. Seasonal produce harvested at peak ripeness for maximum flavor and nutrition.",
+      "image": "",
+      "note": "Available based on growing season — contact for current produce list"
+    }
+  },
   "gallery": [
     {
       "filename": ""

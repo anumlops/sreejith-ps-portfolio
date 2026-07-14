@@ -52,6 +52,19 @@
     </div>
   </section>
 
+  <!-- ===== PRODUCTS ===== -->
+  <section id="products">
+    <div class="section-content">
+      <h2>Farm Produce</h2>
+      <div class="divider"><span class="divider-dot"></span></div>
+      <div id="products-intro" class="products-intro"></div>
+      <div id="products-grid" class="products-grid"></div>
+      <div class="products-cta">
+        <p>To order, <a href="#contact">contact us below</a></p>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== GALLERY ===== -->
   <section id="gallery">
     <div class="section-content">
@@ -116,6 +129,19 @@
           <div class="admin-field"><label>Stat 1</label><div class="arow"><input type="text" id="astat1n" placeholder="500+" style="width:80px"><input type="text" id="astat1l" placeholder="Farmers Reached"></div></div>
           <div class="admin-field"><label>Stat 2</label><div class="arow"><input type="text" id="astat2n" placeholder="50+" style="width:80px"><input type="text" id="astat2l" placeholder="Workshops"></div></div>
           <div class="admin-field"><label>Stat 3</label><div class="arow"><input type="text" id="astat3n" placeholder="10+" style="width:80px"><input type="text" id="astat3l" placeholder="Years"></div></div>
+          <h3>Farm Produce</h3>
+          <p class="admin-hint">Product images — upload to <code>/images</code>, reference as <code>images/rice.jpg</code></p>
+          <div class="admin-field"><label>Intro text</label><textarea id="aprod-intro" rows="2"></textarea></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+            <div><div class="admin-field"><label>Rice — Name</label><input type="text" id="aprod-rice-name"></div>
+            <div class="admin-field"><label>Rice — Description</label><textarea id="aprod-rice-desc" rows="3"></textarea></div>
+            <div class="admin-field"><label>Rice — Image</label><div style="display:flex;gap:0.5rem;align-items:center"><input type="text" id="aprod-rice-img" placeholder="images/rice.jpg"><div class="thumb" id="arice-thumb"></div></div></div>
+            <div class="admin-field"><label>Rice — Note</label><input type="text" id="aprod-rice-note" placeholder="Seasonal availability..."></div></div>
+            <div><div class="admin-field"><label>Veg — Name</label><input type="text" id="aprod-veg-name"></div>
+            <div class="admin-field"><label>Veg — Description</label><textarea id="aprod-veg-desc" rows="3"></textarea></div>
+            <div class="admin-field"><label>Veg — Image</label><div style="display:flex;gap:0.5rem;align-items:center"><input type="text" id="aprod-veg-img" placeholder="images/veg.jpg"><div class="thumb" id="aveg-thumb"></div></div></div>
+            <div class="admin-field"><label>Veg — Note</label><input type="text" id="aprod-veg-note" placeholder="Available based on season..."></div></div>
+          </div>
           <h3>Gallery</h3>
           <p class="admin-hint">Upload images to <code>/images</code> folder in repo, reference as <code>images/farm1.jpg</code></p>
           <div id="admin-gallery"></div>
@@ -135,6 +161,7 @@
           <h3>Live Preview</h3>
           <div class="ap-box"><div class="ap-label">Bio</div><div id="aprev-bio"></div></div>
           <div class="ap-box ap-dark"><div class="ap-label">APEC</div><div id="aprev-apec"></div><div class="ap-stats" id="aprev-stats"></div></div>
+          <div class="ap-box"><div class="ap-label">Farm Produce</div><p id="aprev-products" style="color:#888;font-size:0.85rem"></p></div>
           <div class="ap-box"><div class="ap-label">Gallery</div><p id="aprev-gallery" style="color:#888;font-size:0.85rem"></p></div>
           <div class="ap-box ap-dark"><div class="ap-label">Videos</div><p id="aprev-videos" style="color:#aaa;font-size:0.85rem"></p></div>
           <div class="ap-box"><div class="ap-label">Contact</div><div id="aprev-contact"></div></div>

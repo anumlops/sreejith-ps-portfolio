@@ -46,6 +46,31 @@ function renderContent(data) {
     ).join('');
   }
 
+  // Products
+  const prodIntro = document.getElementById('products-intro');
+  const prodGrid = document.getElementById('products-grid');
+  if (prodIntro && data.products) {
+    prodIntro.innerHTML = `<p>${data.products.intro || ''}</p>`;
+  }
+  if (prodGrid && data.products) {
+    const items = [
+      { key: 'rice', label: 'Organic Rice' },
+      { key: 'vegetables', label: 'Organic Vegetables' }
+    ];
+    prodGrid.innerHTML = items.map(item => {
+      const p = data.products[item.key] || {};
+      const imgStyle = p.image ? `style="background-image:url('${p.image}');border:none;color:transparent"` : '';
+      return `<div class="product-card">
+        <div class="product-card-image" ${imgStyle}>${p.image ? '' : item.label}</div>
+        <div class="product-card-body">
+          <h3>${p.name || item.label}</h3>
+          <p>${p.description || ''}</p>
+          ${p.note ? `<div class="product-note">${p.note}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
   // Gallery
   const galleryEl = document.getElementById('gallery-content');
   if (galleryEl && data.gallery) {
@@ -122,10 +147,25 @@ function adminLogout() {
 }
 
 function initAdmin() {
+  initAdminProducts();
   initAdminGallery();
   initAdminVideos();
   loadAdminContent();
   attachAdminPreviews();
+}
+
+function initAdminProducts() {
+  ['aprod-rice-img', 'aprod-veg-img'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', function() {
+      const thumbId = id === 'aprod-rice-img' ? 'arice-thumb' : 'aveg-thumb';
+      const thumb = document.getElementById(thumbId);
+      if (this.value.trim()) {
+        thumb.innerHTML = `<img src="${this.value.trim()}" alt="" onerror="this.parentElement.innerHTML=''">`;
+      } else { thumb.innerHTML = ''; }
+      updateAdminPreview();
+    });
+  });
 }
 
 function initAdminGallery() {
@@ -190,6 +230,21 @@ function loadAdminContent() {
         document.getElementById('astat3n').value = data.stats[2]?.number || '';
         document.getElementById('astat3l').value = data.stats[2]?.label || '';
       }
+      if (data.products) {
+        document.getElementById('aprod-intro').value = data.products.intro || '';
+        document.getElementById('aprod-rice-name').value = data.products.rice?.name || '';
+        document.getElementById('aprod-rice-desc').value = data.products.rice?.description || '';
+        document.getElementById('aprod-rice-img').value = data.products.rice?.image || '';
+        document.getElementById('aprod-rice-note').value = data.products.rice?.note || '';
+        document.getElementById('aprod-veg-name').value = data.products.vegetables?.name || '';
+        document.getElementById('aprod-veg-desc').value = data.products.vegetables?.description || '';
+        document.getElementById('aprod-veg-img').value = data.products.vegetables?.image || '';
+        document.getElementById('aprod-veg-note').value = data.products.vegetables?.note || '';
+        ['aprod-rice-img', 'aprod-veg-img'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.dispatchEvent(new Event('input'));
+        });
+      }
       if (data.gallery) {
         const inputs = document.querySelectorAll('.ag-input');
         inputs.forEach((inp, i) => { if (data.gallery[i]) inp.value = data.gallery[i].filename || ''; inp.dispatchEvent(new Event('input')); });
@@ -228,6 +283,21 @@ function getAdminData() {
       { number: document.getElementById('astat2n').value, label: document.getElementById('astat2l').value },
       { number: document.getElementById('astat3n').value, label: document.getElementById('astat3l').value }
     ],
+    products: {
+      intro: document.getElementById('aprod-intro').value,
+      rice: {
+        name: document.getElementById('aprod-rice-name').value,
+        description: document.getElementById('aprod-rice-desc').value,
+        image: document.getElementById('aprod-rice-img').value,
+        note: document.getElementById('aprod-rice-note').value
+      },
+      vegetables: {
+        name: document.getElementById('aprod-veg-name').value,
+        description: document.getElementById('aprod-veg-desc').value,
+        image: document.getElementById('aprod-veg-img').value,
+        note: document.getElementById('aprod-veg-note').value
+      }
+    },
     gallery: Array.from(galleryInputs).map(inp => ({ filename: inp.value })),
     videos: Array.from(videoTitles).map((t, i) => ({ title: t.value, url: videoUrls[i].value })),
     contact: {
@@ -242,6 +312,9 @@ function updateAdminPreview() {
   document.getElementById('aprev-bio').innerHTML = [data.bio.paragraph1, data.bio.paragraph2, data.bio.paragraph3].filter(Boolean).map(p => `<p>${p}</p>`).join('');
   document.getElementById('aprev-apec').innerHTML = [data.apec.paragraph1, data.apec.paragraph2].filter(Boolean).map(p => `<p>${p}</p>`).join('');
   document.getElementById('aprev-stats').innerHTML = data.stats.map(s => `<div class="si"><div class="sn">${s.number}</div><div class="sl">${s.label}</div></div>`).join('');
+  const prodRice = data.products?.rice?.image ? 'Rice: image set' : 'Rice: no image';
+  const prodVeg = data.products?.vegetables?.image ? 'Vegetables: image set' : 'Vegetables: no image';
+  document.getElementById('aprev-products').textContent = prodRice + ' | ' + prodVeg;
   const gc = data.gallery.filter(g => g.filename).length;
   document.getElementById('aprev-gallery').textContent = gc > 0 ? gc + ' of 6 images set' : 'No images set';
   const vc = data.videos.filter(v => v.url).length;
