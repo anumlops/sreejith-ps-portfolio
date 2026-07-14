@@ -79,6 +79,70 @@
     </div>
   </section>
 
+  <!-- ===== ADMIN (hidden until login) ===== -->
+  <section id="admin-section">
+    <div class="section-content" id="admin-login">
+      <h2>Admin</h2>
+      <div class="divider"><span class="divider-dot"></span></div>
+      <div class="admin-login-box">
+        <input type="text" id="admin-user" placeholder="Username" autocomplete="off">
+        <input type="password" id="admin-pass" placeholder="Password" autocomplete="off">
+        <button class="btn" onclick="adminLogin()">Login</button>
+        <p id="admin-login-err" class="admin-err"></p>
+      </div>
+    </div>
+    <div class="section-content" id="admin-editor" style="display:none">
+      <h2>Admin — Content Editor</h2>
+      <p class="subtitle" style="margin-bottom:0.5rem">Edit content and publish — changes go live in ~30-60s.</p>
+      <button class="btn btn-sm" onclick="adminLogout()" style="margin-bottom:1.5rem;background:#6B4F3A;color:#fff;border:none;padding:0.4rem 1rem;border-radius:4px;cursor:pointer;font-size:0.85rem">Logout</button>
+
+      <div class="admin-token-bar">
+        <input type="password" id="admin-token" placeholder="GitHub token (ghp_...)" autocomplete="off">
+        <input type="text" id="admin-owner" value="anumlops" placeholder="Owner" style="width:100px">
+        <span style="color:#888">/</span>
+        <input type="text" id="admin-repo" value="sreejith-ps-portfolio" placeholder="Repo" style="width:150px">
+      </div>
+
+      <div class="admin-layout">
+        <div class="admin-form">
+          <h3>Bio</h3>
+          <div class="admin-field"><label>Paragraph 1</label><textarea id="abio1" rows="3"></textarea></div>
+          <div class="admin-field"><label>Paragraph 2</label><textarea id="abio2" rows="3"></textarea></div>
+          <div class="admin-field"><label>Paragraph 3 <span class="opt">(optional)</span></label><textarea id="abio3" rows="3"></textarea></div>
+          <h3>APEC</h3>
+          <div class="admin-field"><label>Paragraph 1</label><textarea id="aapec1" rows="3"></textarea></div>
+          <div class="admin-field"><label>Paragraph 2</label><textarea id="aapec2" rows="3"></textarea></div>
+          <h3>Stats</h3>
+          <div class="admin-field"><label>Stat 1</label><div class="arow"><input type="text" id="astat1n" placeholder="500+" style="width:80px"><input type="text" id="astat1l" placeholder="Farmers Reached"></div></div>
+          <div class="admin-field"><label>Stat 2</label><div class="arow"><input type="text" id="astat2n" placeholder="50+" style="width:80px"><input type="text" id="astat2l" placeholder="Workshops"></div></div>
+          <div class="admin-field"><label>Stat 3</label><div class="arow"><input type="text" id="astat3n" placeholder="10+" style="width:80px"><input type="text" id="astat3l" placeholder="Years"></div></div>
+          <h3>Gallery</h3>
+          <p class="admin-hint">Upload images to <code>/images</code> folder in repo, reference as <code>images/farm1.jpg</code></p>
+          <div id="admin-gallery"></div>
+          <h3>Videos</h3>
+          <p class="admin-hint">Paste YouTube URL or video ID</p>
+          <div id="admin-videos"></div>
+          <h3>Contact</h3>
+          <div class="admin-field"><label>Email</label><input type="text" id="acontact-email"></div>
+          <div class="admin-field"><label>Phone</label><input type="text" id="acontact-phone"></div>
+          <div class="admin-actions">
+            <button class="btn btn-primary" onclick="adminSave()">Save &amp; Publish</button>
+            <button class="btn btn-outline" onclick="adminDownload()">Download content.json</button>
+          </div>
+          <div id="admin-status" class="admin-status"></div>
+        </div>
+        <div class="admin-preview">
+          <h3>Live Preview</h3>
+          <div class="ap-box"><div class="ap-label">Bio</div><div id="aprev-bio"></div></div>
+          <div class="ap-box ap-dark"><div class="ap-label">APEC</div><div id="aprev-apec"></div><div class="ap-stats" id="aprev-stats"></div></div>
+          <div class="ap-box"><div class="ap-label">Gallery</div><p id="aprev-gallery" style="color:#888;font-size:0.85rem"></p></div>
+          <div class="ap-box ap-dark"><div class="ap-label">Videos</div><p id="aprev-videos" style="color:#aaa;font-size:0.85rem"></p></div>
+          <div class="ap-box"><div class="ap-label">Contact</div><div id="aprev-contact"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   </main>
 
   <!-- ===== FOOTER ===== -->

@@ -321,6 +321,63 @@ footer {
   opacity: 0.85;
 }
 
+/* ===== ADMIN ===== */
+#admin-section { background: #1A1A18 !important; color: #e0ddd5; }
+#admin-section .section-content { max-width: 1100px; margin: 0 auto; }
+#admin-section h2 { color: #8AB4C9; }
+#admin-section .subtitle { color: #8AB4C9; }
+.admin-login-box { max-width: 320px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; }
+.admin-login-box input { padding: 0.6rem 0.75rem; border: 1px solid #555; border-radius: 4px; background: #2a2a28; color: #fff; font-size: 0.95rem; }
+.admin-login-box input:focus { outline: 2px solid #8AB4C9; border-color: transparent; }
+.admin-login-box .btn { padding: 0.6rem; background: #2D5A27; color: #fff; border: none; border-radius: 4px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+.admin-login-box .btn:hover { opacity: 0.85; }
+.admin-err { color: #e74c3c; font-size: 0.85rem; text-align: center; display: none; }
+.admin-token-bar { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.admin-token-bar input { padding: 0.5rem 0.75rem; border: 1px solid #555; border-radius: 4px; background: #2a2a28; color: #fff; font-size: 0.85rem; flex: 1; min-width: 150px; }
+.admin-token-bar input:focus { outline: 2px solid #8AB4C9; border-color: transparent; }
+.admin-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media (max-width: 800px) { .admin-layout { grid-template-columns: 1fr; } }
+.admin-form h3 { font-size: 0.95rem; color: #8AB4C9; margin: 1rem 0 0.5rem; padding-bottom: 0.3rem; border-bottom: 1px solid #333; }
+.admin-field { margin-bottom: 0.75rem; }
+.admin-field label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 0.2rem; }
+.admin-field .opt { color: #666; font-weight: 400; }
+.admin-field textarea { width: 100%; min-height: 60px; padding: 0.5rem; border: 1px solid #555; border-radius: 4px; background: #2a2a28; color: #e0ddd5; font-size: 0.85rem; font-family: inherit; resize: vertical; }
+.admin-field textarea:focus { outline: 2px solid #8AB4C9; border-color: transparent; }
+.admin-field input[type="text"] { width: 100%; padding: 0.5rem; border: 1px solid #555; border-radius: 4px; background: #2a2a28; color: #e0ddd5; font-size: 0.85rem; }
+.admin-field input:focus { outline: 2px solid #8AB4C9; border-color: transparent; }
+.arow { display: flex; gap: 0.5rem; }
+.arow input { flex: 1; }
+.admin-hint { font-size: 0.8rem; color: #888; margin-bottom: 0.5rem; }
+.admin-hint code { background: #2a2a28; padding: 0.1rem 0.3rem; border-radius: 3px; }
+#admin-gallery .admin-field { display: flex; gap: 0.5rem; align-items: center; }
+#admin-gallery .admin-field input { flex: 1; }
+#admin-gallery .admin-field .thumb { width: 40px; height: 30px; border-radius: 3px; background: #333; flex-shrink: 0; overflow: hidden; }
+#admin-gallery .admin-field .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#admin-videos .admin-field { display: flex; gap: 0.5rem; align-items: center; }
+#admin-videos .admin-field input { flex: 1; }
+#admin-videos .admin-field input:first-child { width: 35%; flex-shrink: 0; }
+#admin-videos .admin-field .vstat { font-size: 0.75rem; color: #888; white-space: nowrap; }
+.admin-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.admin-actions .btn { padding: 0.6rem 1.25rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+.admin-actions .btn:hover { opacity: 0.85; }
+.admin-actions .btn-primary { background: #2D5A27; color: #fff; }
+.admin-actions .btn-outline { background: none; border: 2px solid #8AB4C9; color: #8AB4C9; }
+.admin-actions .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.admin-status { margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.85rem; display: none; }
+.admin-status.success { background: #1e3a1c; color: #8fc98a; border: 1px solid #2D5A27; display: block; }
+.admin-status.error { background: #3a1c1c; color: #e74c3c; border: 1px solid #5a2727; display: block; }
+.admin-status.info { background: #1c2a3a; color: #8AB4C9; border: 1px solid #274a5a; display: block; }
+.admin-preview { background: #2a2a28; border: 1px solid #333; border-radius: 8px; padding: 1.25rem; position: sticky; top: 1rem; max-height: calc(100vh - 4rem); overflow-y: auto; }
+.admin-preview h3 { font-size: 0.95rem; color: #8AB4C9; margin-bottom: 0.75rem; }
+.ap-box { background: #3a3a38; padding: 0.75rem; border-radius: 6px; margin-bottom: 0.75rem; }
+.ap-box.ap-dark { background: #2D5A27; color: #e0ddd5; }
+.ap-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.5; margin-bottom: 0.4rem; }
+.ap-box p { font-size: 0.8rem; line-height: 1.5; margin-bottom: 0.3rem; }
+.ap-stats { display: flex; gap: 1rem; margin-top: 0.5rem; }
+.ap-stats .si { text-align: center; }
+.ap-stats .si .sn { font-weight: 700; font-size: 1rem; }
+.ap-stats .si .sl { font-size: 0.7rem; opacity: 0.7; }
+
 /* ===== RESPONSIVE ===== */
 
 /* Tablet */
